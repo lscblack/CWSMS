@@ -29,6 +29,14 @@ const Dashboard = () => {
                         <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg bg-amber-700 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-transparent">
                             <li>
                                 <a
+                                    onClick={() => setViewPage("dash")}
+                                    className="block py-2 px-3 text-white rounded hover:bg-amber-600 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0"
+                                >
+                                    Report
+                                </a>
+                            </li>      
+                            <li>
+                                <a
                                     onClick={() => setViewPage("emp")}
                                     className="block py-2 px-3 text-white rounded hover:bg-amber-600 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0"
                                 >
