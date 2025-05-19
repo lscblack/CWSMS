@@ -70,6 +70,7 @@ const Dashboard = () => {
 
 
                         {/* Recent Activity Section */}
+                        <Sal/>
                      
                     </main>
                 }

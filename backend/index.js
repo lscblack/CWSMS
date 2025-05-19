@@ -4,6 +4,7 @@ import users from './endpoints/users.js';
 import router from './endpoints/salary.js';
 import emp from './endpoints/employee.js';
 import dep from './endpoints/depa.js';
+import rep from './endpoints/report.js';
 
 const app = express();
 const PORT =  3000;
@@ -15,6 +16,7 @@ app.use(users)
 app.use("/salary",router)
 app.use("/emp",emp)
 app.use("/dep",dep)
+app.use(rep)
 // Start server
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
