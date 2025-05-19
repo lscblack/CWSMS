@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Printer, RefreshCw, Search, Download, ChevronUp, ChevronDown } from 'lucide-react';
 
 // Primary color: Dark Orange
-const PRIMARY_COLOR = '#FF8C09';
+const PRIMARY_COLOR = '#92400E';
 
 export default function SalaryReportSystem() {
   const [reportData, setReportData] = useState([]);
