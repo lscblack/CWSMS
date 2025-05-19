@@ -21,8 +21,8 @@ app.get('/api/report/salary', async (req, res) => {
                 s.totalDeducation, 
                 s.netSalary
             FROM employee e
-            JOIN salary s ON e.employeeNumber = s.employeNumber
-            JOIN department d ON d.glossSalary = s.glossSalary;
+            LEFT JOIN salary s ON e.employeeNumber = s.employeNumber
+            LEFT JOIN department d ON d.departmentCode = e.employeeNumber;
         `);
 
         res.status(200).json({
