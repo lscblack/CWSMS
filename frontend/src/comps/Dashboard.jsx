@@ -21,7 +21,7 @@ const Dashboard = () => {
         // Remove uname from localStorage
         localStorage.removeItem('uname');
         // Redirect to login page or home page
-        navigate('/'); // Change this to your login route
+        window.location.href="/"
     };
 
     return (
