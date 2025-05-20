@@ -167,6 +167,7 @@ export default function ServiceSummaryReport() {
             <RefreshCw size={16} className="mr-1" /> Refresh
           </button>
           <button 
+          onClick={()=>window.print()}
             className="px-3 py-2 bg-slate-800 text-white rounded-md hover:bg-slate-700 flex items-center"
           >
             <Download size={16} className="mr-1" /> Export
