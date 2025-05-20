@@ -113,7 +113,7 @@ export default function ServiceRecordsManager() {
                 showAlert('Service record deleted successfully', 'success');
 
                 // Remove from local state
-                setServiceRecords(serviceRecords.filter(record => record.id !== id));
+                setServiceRecords(serviceRecords.filter(record => record.RecordNumber !== id));
             } catch (err) {
                 showAlert('Failed to delete service record', 'error');
                 console.error('Error deleting service record:', err);
