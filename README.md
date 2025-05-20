@@ -1,5 +1,4 @@
 
-```markdown
 # Car Repair Payment System
 
 A full-stack application for managing car repair services and payments, with Express.js backend and React (Vite) frontend.
