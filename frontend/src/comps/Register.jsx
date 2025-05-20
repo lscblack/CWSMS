@@ -109,155 +109,164 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className=" bg-white rounded-2xl shadow-xl overflow-hidden w-1/3">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-lg overflow-hidden max-w-md w-full border border-slate-100">
+        <div className="w-full p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-slate-800 mb-2">Create Account</h1>
+            <p className="text-slate-500">Fill in the details below to get started</p>
+          </div>
 
-        {/* Right Side - Registration Form */}
-        <div className="w-full p-8 lg:p-10">
-          <div className="max-w-md mx-auto">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-              <p className="text-gray-600">Fill in the details below to get started</p>
-            </div>
-
-            {/* Success Message */}
-            {successMessage && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-2">
+          {/* Success Message */}
+          {successMessage && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center space-x-2">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <span className="text-green-800">{successMessage}</span>
+                <span className="text-green-800 font-medium">{successMessage}</span>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* General Error Message */}
-            {errors.general && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center space-x-2">
+          {/* General Error Message */}
+          {errors.general && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-center space-x-2">
                 <XCircle className="w-5 h-5 text-red-600" />
-                <span className="text-red-800">{errors.general}</span>
+                <span className="text-red-800 font-medium">{errors.general}</span>
               </div>
-            )}
+            </div>
+          )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username Field */}
-              <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value={formData.username}
-                    onChange={handleInputChange}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors.username
-                        ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:ring-orange-500 focus:border-orange-500'
-                      }`}
-                    placeholder="Enter your username"
-                  />
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Username Field */}
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-slate-700 mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-slate-400" />
                 </div>
-                {errors.username && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  className={`block w-full pl-10 pr-3 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                    errors.username
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
+                      : 'border-slate-300 focus:ring-slate-500 focus:border-slate-500'
+                  }`}
+                  placeholder="Enter your username"
+                />
+              </div>
+              {errors.username && (
+                <p className="mt-2 text-sm text-red-600">
+                  <span className="flex items-center space-x-1">
                     <XCircle className="w-4 h-4" />
                     <span>{errors.username}</span>
-                  </p>
-                )}
-              </div>
+                  </span>
+                </p>
+              )}
+            </div>
 
-              {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className={`block w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${errors.password
-                        ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
-                        : 'border-gray-300 focus:ring-orange-500 focus:border-orange-500'
-                      }`}
-                    placeholder="Create a strong password"
-                  />
-                  <button
-                    type="button"
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                    ) : (
-                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                    )}
-                  </button>
+            {/* Password Field */}
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-slate-400" />
                 </div>
-                {errors.password && (
-                  <p className="mt-2 text-sm text-red-600 flex items-center space-x-1">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className={`block w-full pl-10 pr-10 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-colors ${
+                    errors.password
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
+                      : 'border-slate-300 focus:ring-slate-500 focus:border-slate-500'
+                  }`}
+                  placeholder="Create a strong password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-600 transition-colors" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-slate-400 hover:text-slate-600 transition-colors" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-2 text-sm text-red-600">
+                  <span className="flex items-center space-x-1">
                     <XCircle className="w-4 h-4" />
                     <span>{errors.password}</span>
-                  </p>
-                )}
+                  </span>
+                </p>
+              )}
 
-                {/* Password Strength Indicator */}
-                {formData.password && (
-                  <div className="mt-3 space-y-2">
-                    <p className="text-sm font-medium text-gray-700">Password Requirements:</p>
-                    <div className="space-y-1">
-                      {passwordCriteria.map((criteria, index) => {
-                        const isValid = criteria.test(formData.password);
-                        return (
-                          <div key={index} className="flex items-center space-x-2">
-                            {isValid ? (
-                              <CheckCircle className="w-4 h-4 text-green-600" />
-                            ) : (
-                              <XCircle className="w-4 h-4 text-gray-400" />
-                            )}
-                            <span className={`text-xs ${isValid ? 'text-green-600' : 'text-gray-500'}`}>
-                              {criteria.label}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
+              {/* Password Strength Indicator */}
+              {formData.password && (
+                <div className="mt-4 space-y-2">
+                  <p className="text-sm font-medium text-slate-700">Password Requirements:</p>
+                  <div className="space-y-1.5 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                    {passwordCriteria.map((criteria, index) => {
+                      const isValid = criteria.test(formData.password);
+                      return (
+                        <div key={index} className="flex items-center space-x-2">
+                          {isValid ? (
+                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <XCircle className="w-4 h-4 text-slate-400" />
+                          )}
+                          <span className={`text-xs ${isValid ? 'text-green-600' : 'text-slate-500'}`}>
+                            {criteria.label}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
-                )}
-              </div>
-
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {isLoading ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    <span>Creating Account...</span>
-                  </div>
-                ) : (
-                  'Create Account'
-                )}
-              </button>
-            </form>
-
-            {/* Footer */}
-            <div className="mt-8 text-center">
-              <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <a href="/" className="font-medium text-orange-600 hover:text-orange-500 transition-colors">
-                  Sign in here
-                </a>
-              </p>
+                </div>
+              )}
             </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-slate-800 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            >
+              {isLoading ? (
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>Creating Account...</span>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center space-x-2">
+                  <UserPlus className="w-5 h-5" />
+                  <span>Create Account</span>
+                </div>
+              )}
+            </button>
+          </form>
+
+          {/* Footer */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-slate-500">
+              Already have an account?{' '}
+              <a href="/" className="font-medium text-slate-800 hover:text-slate-600 transition-colors">
+                Sign in here
+              </a>
+            </p>
           </div>
         </div>
       </div>

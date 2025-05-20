@@ -1,13 +1,20 @@
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Emp from './Emp';
-import Sal from './Sal';
-import Dep from './Dep';
-import SalaryManagementApp from './add-sal';
+
+import ServiceRecords from './ServiceRecords';
+import { Paperclip } from 'lucide-react';
+import { Car } from 'lucide-react';
+import { Coins } from 'lucide-react';
+import { FileArchiveIcon } from 'lucide-react';
+import { PawPrint } from 'lucide-react';
+import CarRegistrationForm from './Cars';
+import ServiceManagement from './Service';
+import PaymentForm from './Moneny';
+import ServiceDashboard from './REport';
 
 const Dashboard = () => {
-    const [viewPage, setViewPage] = useState("dash")
+    const [viewPage, setViewPage] = useState("dash");
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -18,75 +25,117 @@ const Dashboard = () => {
     };
 
     return (
-        <>
-            <nav className="bg-amber-800 border-gray-200 shadow-md">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">Employee Portal</span>
-                    </a>
-
-                    <div className="hidden w-full md:block md:w-auto" id="navbar-default">
-                        <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 rounded-lg bg-amber-700 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-transparent">
+        <div className="min-h-screen bg-slate-50">
+            {/* Modern sidebar navigation */}
+            <div className="flex">
+                <aside className="fixed inset-y-0 left-0 w-64 bg-slate-800 text-white shadow-lg z-10">
+                    <div className="p-6">
+                        <h1 className="text-2xl font-bold text-white">CRPMS Portal</h1>
+                    </div>
+                    <nav className="mt-6">
+                        <ul className="space-y-2 px-4">
                             <li>
-                                <a
+                                <button
                                     onClick={() => setViewPage("dash")}
-                                    className="block py-2 px-3 text-white rounded hover:bg-amber-600 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0"
+                                    className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${viewPage === "dash"
+                                        ? "bg-slate-700 text-white"
+                                        : "hover:bg-slate-700 text-slate-300 hover:text-white"
+                                        }`}
                                 >
-                                    Report
-                                </a>
-                            </li>      
-                            <li>
-                                <a
-                                    onClick={() => setViewPage("emp")}
-                                    className="block py-2 px-3 text-white rounded hover:bg-amber-600 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0"
-                                >
-                                    Manage Employee
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    onClick={() => setViewPage("dep")}
-                                    className="block py-2 px-3 text-white rounded hover:bg-amber-600 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0"
-                                >
-                                    Manage Department
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    onClick={() => setViewPage("sal")}
-                                    className="block py-2 px-3 text-white rounded hover:bg-amber-600 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0"
-                                >
-                                    Manage Salary
-                                </a>
+                                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                                    </svg>
+                                    Dashboard
+                                </button>
                             </li>
                             <li>
                                 <button
-                                    onClick={handleLogout}
-                                    className="block py-2 px-3 text-white bg-amber-900 rounded hover:bg-amber-950 md:hover:bg-transparent md:border-0 md:hover:text-amber-200 md:p-0 transition-colors duration-200"
+                                    onClick={() => setViewPage("car")}
+                                    className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${viewPage === "car"
+                                        ? "bg-slate-700 text-white"
+                                        : "hover:bg-slate-700 text-slate-300 hover:text-white"
+                                        }`}
                                 >
-                                    Logout
+                                    <Car />
+                                    Cars
                                 </button>
                             </li>
+                            <li>
+                                <button
+                                    onClick={() => setViewPage("serv")}
+                                    className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${viewPage === "serv"
+                                        ? "bg-slate-700 text-white"
+                                        : "hover:bg-slate-700 text-slate-300 hover:text-white"
+                                        }`}
+                                >
+                                    <PawPrint />
+                                    Services
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => setViewPage("reco")}
+                                    className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${viewPage === "reco"
+                                        ? "bg-slate-700 text-white"
+                                        : "hover:bg-slate-700 text-slate-300 hover:text-white"
+                                        }`}
+                                >
+                                    <Paperclip />
+                                    Service Records
+                                </button>
+                            </li>
+
+                            <li>
+                                <button
+                                    onClick={() => setViewPage("pay")}
+                                    className={`w-full flex items-center px-4 py-3 rounded-lg transition-colors ${viewPage === "pay"
+                                        ? "bg-slate-700 text-white"
+                                        : "hover:bg-slate-700 text-slate-300 hover:text-white"
+                                        }`}
+                                >
+                                    <Coins />
+                                    manage payments
+                                </button>
+                            </li>
+
+                          
                         </ul>
+                        <div className="absolute bottom-0 left-0 right-0 p-4">
+                            <button
+                                onClick={handleLogout}
+                                className="w-full flex items-center justify-center px-4 py-3 bg-slate-900 hover:bg-slate-700 text-white rounded-lg transition-colors"
+                            >
+                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                Logout
+                            </button>
+                        </div>
+                    </nav>
+                </aside>
+
+                {/* Main content area */}
+                <main className="ml-64 flex-1 p-0">
+                    {/* Top header */}
+                    <header className="flex justify-between items-center mb-1 bg-white p-4">
+                        <h1 className="text-2xl font-bold text-slate-800">
+                            {viewPage === "dash" ? "Dashboard Overview" : "Dashboard CRPMS"}
+                        </h1>
+
+                    </header>
+
+                    {/* Page content */}
+                    <div className="bg-white rounded-lg  p-6">
+                        {viewPage === "dash" && <ServiceDashboard />}
+                        {viewPage === "reco" && <ServiceRecords />}
+                        {viewPage === "car" && <CarRegistrationForm />}
+                        {viewPage === "serv" && <ServiceManagement/>}
+                        {viewPage === "pay" && <PaymentForm/>}
+
                     </div>
-                </div>
-            </nav>
-            <main>
-                {viewPage == "dash" &&
-                    <main className="max-w-screen-xl mx-auto p-6">
-                        <h1 className="text-3xl font-bold text-amber-900 mb-8">Dashboard Overview</h1>
-
-
-                        {/* Recent Activity Section */}
-                        <Sal/>
-                     
-                    </main>
-                }
-                {viewPage == "emp" && <Emp />}
-                {viewPage == "dep" && <Dep />}
-                {viewPage == "sal" && <SalaryManagementApp />}
-            </main>
-        </>
+                </main>
+            </div>
+        </div>
     );
 };
 

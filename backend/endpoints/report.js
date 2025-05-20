@@ -1,28 +1,39 @@
 import express from 'express';
 import { pool } from '../middleware.js';
 
-const app = express.Router();
+const router = express.Router();
 
-// Report Endpoint
-app.get('/api/report/salary', async (req, res) => {
+// GET - General service report without relying on foreign keys
+router.get('/reports/service-summary', async (req, res) => {
     try {
         const [rows] = await pool.query(`
             SELECT 
-                e.employeeNumber, 
-                e.FirstNames, 
-                e.LastName, 
-                e.position, 
-                e.gender, 
-                e.telephone, 
-                e.address, 
-                e.hiredDate, 
-                d.departmentName, 
-                s.glossSalary, 
-                s.totalDeducation, 
-                s.netSalary
-            FROM employee e
-            LEFT JOIN salary s ON e.employeeNumber = s.employeNumber
-            LEFT JOIN department d ON d.departmentCode = e.employeeNumber;
+                sr.RecordNumber,
+                sr.ServiceDate,
+
+                c.PlateNumber,
+                c.Model,
+                c.Type,
+
+                sr.ServiceCode, -- We fetch it from ServiceRecord
+                s.ServiceName,
+                s.ServicePrice,
+
+                p.AmountPaid,
+                p.PaymentDate
+
+            FROM ServiceRecord sr
+
+            LEFT JOIN Car c 
+                ON sr.PlateNumber = c.PlateNumber
+
+            LEFT JOIN Services s 
+                ON sr.ServiceCode = s.ServiceCode
+
+            LEFT JOIN Payment p 
+                ON sr.RecordNumber = p.RecordNumber
+
+            ORDER BY sr.ServiceDate DESC
         `);
 
         res.status(200).json({
@@ -30,11 +41,13 @@ app.get('/api/report/salary', async (req, res) => {
             data: rows
         });
     } catch (error) {
-        console.error(error);
+        console.error('Service Summary Report Error:', error);
         res.status(500).json({
             success: false,
-            message: 'An error occurred while generating the report.'
+            message: 'Error fetching service summary report'
         });
     }
 });
-export default app
+
+
+export default router;

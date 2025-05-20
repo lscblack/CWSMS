@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 19, 2025 at 02:56 PM
+-- Generation Time: May 20, 2025 at 11:53 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,50 +18,48 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `epms`
+-- Database: `crpms`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `salary`
+-- Table structure for table `servicerecord`
 --
 
-CREATE TABLE `salary` (
-  `id` int(11) NOT NULL,
-  `glossSalary` float NOT NULL,
-  `totalDeducation` float NOT NULL,
-  `netSalary` float NOT NULL,
-  `employeNumber` int(11) NOT NULL
+CREATE TABLE `servicerecord` (
+  `RecordNumber` int(11) NOT NULL,
+  `ServiceDate` date NOT NULL,
+  `PlateNumber` varchar(20) DEFAULT NULL,
+  `ServiceCode` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `salary`
+-- Dumping data for table `servicerecord`
 --
 
-INSERT INTO `salary` (`id`, `glossSalary`, `totalDeducation`, `netSalary`, `employeNumber`) VALUES
-(4, 233, 3412, 12, 12);
+INSERT INTO `servicerecord` (`RecordNumber`, `ServiceDate`, `PlateNumber`, `ServiceCode`) VALUES
+(1, '0009-05-03', 'ABC', 'SV001');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `salary`
+-- Indexes for table `servicerecord`
 --
-ALTER TABLE `salary`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `employeNumber` (`employeNumber`);
+ALTER TABLE `servicerecord`
+  ADD PRIMARY KEY (`RecordNumber`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `salary`
+-- AUTO_INCREMENT for table `servicerecord`
 --
-ALTER TABLE `salary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `servicerecord`
+  MODIFY `RecordNumber` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

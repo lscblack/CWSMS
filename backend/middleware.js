@@ -6,7 +6,7 @@ const dbConfig = {
     host: 'localhost',
     user: 'root', 
     password: '',
-    database: 'epms',
+    database: 'crpms',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
