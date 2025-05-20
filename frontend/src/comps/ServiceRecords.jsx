@@ -106,6 +106,7 @@ export default function ServiceRecordsManager() {
     };
 
     const handleDelete = async (id) => {
+        console.log(id)
         if (window.confirm('Are you sure you want to delete this service record?')) {
             try {
                 await axios.delete(`http://127.0.0.1:3000/api/service-records/${id}`);
@@ -217,7 +218,7 @@ export default function ServiceRecordsManager() {
                                             <Edit className="h-4 w-4" />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(record.id)}
+                                            onClick={() => handleDelete(record.RecordNumber)}
                                             className="p-1 text-red-600 hover:text-red-800 transition-colors"
                                             title="Delete"
                                         >
