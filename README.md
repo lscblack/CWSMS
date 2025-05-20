@@ -15,12 +15,14 @@ cd car-repair-payment-system
 ```bash
 cd backend
 npm install
+npm run dev
 ```
 
 3. Set up the frontend:
 ```bash
 cd ../frontend
 npm install
+npm run dev
 ```
 
 ## Available Scripts
