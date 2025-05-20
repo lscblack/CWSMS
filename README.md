@@ -5,20 +5,6 @@ A full-stack application for managing car repair services and payments, with Exp
 
 ## Project Structure
 
-```
-car-repair-payment-system/
-├── backend/          # Express.js server
-│   ├── models/      # Database models
-│   ├── routes/      # API routes
-│   ├── app.js       # Express application
-│   └── package.json # Backend dependencies
-│
-├── frontend/        # React (Vite) application
-│   ├── src/         # React source files
-│   └── package.json # Frontend dependencies
-│
-└── README.md        # Project documentation
-```
 
 ## Getting Started
 
