@@ -7,10 +7,10 @@ A full-stack application for managing car repair services and payments, with Exp
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/lscblack/car-repair-payment-system/
-cd car-repair-payment-system
+[git clone https://github.com/lscblack/car-repair-payment-system/](https://github.com/lscblack/CWSMS)
+cd CWSMS
 ```
-
+import database
 2. Set up the backend:
 ```bash
 cd backend
