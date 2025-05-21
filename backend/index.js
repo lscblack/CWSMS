@@ -1,24 +1,22 @@
 import express from 'express';
 import {  setupMiddleware } from './middleware.js';
 import users from './endpoints/users.js';
-import serviceRecordRoutes from './endpoints/serviceRecordRoutes.js';
-import servicesRoutes from './endpoints/servicesRoutes.js';
 import carRoutes from './endpoints/carRoutes.js';
+import packageRoutes from './endpoints/packageRoutes.js';
+import servicePackageRoutes from './endpoints/servicePackageRoutes.js';
 import paymentRoutes from './endpoints/paymentRoutes.js';
-import statsRoutes from './endpoints/statsRoutes.js'; // Add this line
-import repo from './endpoints/report.js';
+import reportRoutes from './endpoints/reportRoutes.js'; // Add this line
 const app = express();
 const PORT =  3000;
 
 // Setup middleware
 setupMiddleware(app);
-// Use the routes
-app.use(repo);
-app.use('/api/service-records', serviceRecordRoutes);
-app.use('/api/services', servicesRoutes);
+// Routes
 app.use('/api/cars', carRoutes);
+app.use('/api/packages', packageRoutes);
+app.use('/api/service-records', servicePackageRoutes);
 app.use('/api/payments', paymentRoutes);
-app.use('/api/stats', statsRoutes); // Add this line
+app.use('/api/reports', reportRoutes); // Add this line
 app.use(users)
 // Start server
 app.listen(PORT, () => {

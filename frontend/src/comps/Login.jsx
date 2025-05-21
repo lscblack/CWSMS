@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Lock, CheckCircle, XCircle, LogIn } from 'lucide-react';
+import axios from 'axios';
 
 const LoginForm = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-    });
+    const [formData, setFormData] = useState({ username: '', password: '' });
     const [errors, setErrors] = useState({});
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -13,60 +11,18 @@ const LoginForm = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-
-        // Clear errors when user starts typing
-        if (errors[name]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
-        }
-
-        // Clear success message when user makes changes
-        if (successMessage) {
-            setSuccessMessage('');
-        }
+        setFormData(prev => ({ ...prev, [name]: value }));
+        
+        if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+        if (successMessage) setSuccessMessage('');
     };
 
     const validateForm = () => {
         const newErrors = {};
-
-        // Username validation
-        if (!formData.username.trim()) {
-            newErrors.username = 'Username is required';
-        }
-
-        // Password validation
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-        }
-
+        if (!formData.username.trim()) newErrors.username = 'Username is required';
+        if (!formData.password) newErrors.password = 'Password is required';
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
-    };
-
-    const makeApiCall = async (url, data) => {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'Unknown error occurred' }));
-            const error = new Error(errorData.message || 'Request failed');
-            error.status = response.status;
-            error.response = { status: response.status, data: errorData };
-            throw error;
-        }
-
-        return response.json();
     };
 
     const handleSubmit = async (e) => {
@@ -80,7 +36,7 @@ const LoginForm = () => {
         setErrors({});
 
         try {
-            const response = await makeApiCall('http://localhost:3000/login', {
+            const response = await axios.post('http://localhost:3000/login', {
                 username: formData.username,
                 password: formData.password
             });
@@ -91,6 +47,7 @@ const LoginForm = () => {
             // You can redirect or update app state here
             console.log('Login successful:', response);
         } catch (error) {
+            console.log(error)
             if (error.response) {
                 const { status, data } = error.response;
 
@@ -113,159 +70,89 @@ const LoginForm = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
-            <div className="max-w-md w-full">
-                {/* Header */}
-                <div className="bg-white rounded-xl shadow-lg p-8 border border-slate-100">
-                <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-slate-800 mb-2">Welcome Back</h1>
-                    <p className="text-slate-500">Sign in to your account to continue</p>
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                <div className="text-center mb-6">
+                    <h1 className="text-2xl font-semibold text-gray-800">Sign In</h1>
                 </div>
 
-                {/* Login Card */}
-                    {/* Success Message */}
-                    {successMessage && (
-                        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                            <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-5 h-5 text-green-600" />
-                                <span className="text-green-800 font-medium">{successMessage}</span>
+                {successMessage && (
+                    <div className="mb-4 p-3 bg-green-100 text-green-800 rounded text-sm flex items-center gap-2">
+                        <CheckCircle size={16} /> {successMessage}
+                    </div>
+                )}
+
+                {errors.general && (
+                    <div className="mb-4 p-3 bg-red-100 text-red-800 rounded text-sm flex items-center gap-2">
+                        <XCircle size={16} /> {errors.general}
+                    </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <User size={16} className="text-gray-400" />
                             </div>
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleInputChange}
+                                className={`pl-9 w-full p-2 border rounded-md text-sm ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
+                                placeholder="Username"
+                            />
                         </div>
-                    )}
-
-                    {/* General Error Message */}
-                    {errors.general && (
-                        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                            <div className="flex items-center space-x-2">
-                                <XCircle className="w-5 h-5 text-red-600" />
-                                <span className="text-red-800 font-medium">{errors.general}</span>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Login Form */}
-                    <div className="space-y-6">
-                        {/* Username Field */}
-                        <div>
-                            <label htmlFor="username" className="block text-sm font-medium text-slate-700 mb-2">
-                                Username
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <User className="h-5 w-5 text-slate-400" />
-                                </div>
-                                <input
-                                    type="text"
-                                    id="username"
-                                    name="username"
-                                    value={formData.username}
-                                    onChange={handleInputChange}
-                                    className={`block w-full pl-10 pr-4 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                                        errors.username
-                                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
-                                            : 'border-slate-300 focus:ring-slate-500 focus:border-slate-500'
-                                    }`}
-                                    placeholder="Enter your username"
-                                />
-                            </div>
-                            {errors.username && (
-                                <p className="mt-2 text-sm text-red-600">
-                                    <span className="flex items-center space-x-1">
-                                        <XCircle className="w-4 h-4" />
-                                        <span>{errors.username}</span>
-                                    </span>
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Password Field */}
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
-                                Password
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-slate-400" />
-                                </div>
-                                <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
-                                    onChange={handleInputChange}
-                                    className={`block w-full pl-10 pr-12 py-2.5 border rounded-lg focus:outline-none focus:ring-2 transition-all duration-200 ${
-                                        errors.password
-                                            ? 'border-red-300 focus:ring-red-500 focus:border-red-500 bg-red-50'
-                                            : 'border-slate-300 focus:ring-slate-500 focus:border-slate-500'
-                                    }`}
-                                    placeholder="Enter your password"
-                                />
-                                <button
-                                    type="button"
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                >
-                                    {showPassword ? (
-                                        <EyeOff className="h-5 w-5 text-slate-400 hover:text-slate-600 transition-colors" />
-                                    ) : (
-                                        <Eye className="h-5 w-5 text-slate-400 hover:text-slate-600 transition-colors" />
-                                    )}
-                                </button>
-                            </div>
-                            {errors.password && (
-                                <p className="mt-2 text-sm text-red-600">
-                                    <span className="flex items-center space-x-1">
-                                        <XCircle className="w-4 h-4" />
-                                        <span>{errors.password}</span>
-                                    </span>
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Remember Me & Forgot Password */}
-                        <div className="flex items-center justify-end">
-                            <button
-                                type="button"
-                                className="text-sm text-slate-600 hover:text-slate-800 font-medium transition-colors"
-                            >
-                                Forgot password?
-                            </button>
-                        </div>
-
-                        {/* Submit Button */}
-                        <button
-                            type="button"
-                            onClick={handleSubmit}
-                            disabled={isLoading}
-                            className="w-full py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-slate-800 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                        >
-                            {isLoading ? (
-                                <span className="flex items-center justify-center space-x-2">
-                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                    <span>Signing in...</span>
-                                </span>
-                            ) : (
-                                <span className="flex items-center justify-center space-x-2">
-                                    <LogIn className="w-5 h-5" />
-                                    <span>Sign In</span>
-                                </span>
-                            )}
-                        </button>
+                        {errors.username && <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><XCircle size={12} /> {errors.username}</p>}
                     </div>
 
-                    {/* Footer */}
-                    <div className="mt-8 text-center">
-                        <p className="text-sm text-slate-500">
-                            Don't have an account?{' '}
+                    <div>
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Lock size={16} className="text-gray-400" />
+                            </div>
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                name="password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                className={`pl-9 w-full p-2 border rounded-md text-sm ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+                                placeholder="Password"
+                            />
                             <button
-                                onClick={() => window.location.href = "/register"}
                                 type="button"
-                                className="font-medium text-slate-800 hover:text-slate-600 transition-colors"
+                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                                onClick={() => setShowPassword(!showPassword)}
                             >
-                                Sign up now
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
-                        </p>
+                        </div>
+                        {errors.password && <p className="mt-1 text-xs text-red-600 flex items-center gap-1"><XCircle size={12} /> {errors.password}</p>}
                     </div>
+
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-green-800 hover:bg-green-900 text-white p-2 rounded-md text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                        {isLoading ? (
+                            <>
+                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                                Signing in...
+                            </>
+                        ) : (
+                            <>
+                                <LogIn size={16} /> Sign In
+                            </>
+                        )}
+                    </button>
+                </form>
+
+                <div className="mt-4 text-center text-xs text-gray-500">
+                    Don't have an account?{' '}
+                    <button onClick={() => window.location.href = "/register"} className="text-green-800 hover:underline">
+                        Sign up
+                    </button>
                 </div>
             </div>
         </div>

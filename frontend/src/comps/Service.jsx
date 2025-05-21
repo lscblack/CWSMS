@@ -1,167 +1,162 @@
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { CheckCircle, AlertCircle, Plus, Search, Trash2, Edit, RefreshCw } from 'lucide-react';
 
-export default function ServiceManagement() {
-  // State for form inputs
-  const [serviceCode, setServiceCode] = useState('');
-  const [serviceName, setServiceName] = useState('');
-  const [servicePrice, setServicePrice] = useState('');
-  
-  // State for notifications
-  const [notification, setNotification] = useState({ show: false, type: '', message: '' });
-  
-  // State for loading
-  const [isLoading, setIsLoading] = useState(false);
+const ServiceRecords = () => {
+  const [records, setRecords] = useState([]);
+  const [form, setForm] = useState({
+    PlateNumber: '',
+    PackageNumber: '',
+  });
+  const [editingId, setEditingId] = useState(null);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-  // Handle form submission
+  const fetchRecords = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/api/service-records');
+      setRecords(res.data);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to fetch service records');
+    }
+  };
+
+  useEffect(() => {
+    fetchRecords();
+  }, []);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    
+    setMessage('');
+    setError('');
     try {
-      await axios.post('http://127.0.0.1:3000/api/services', {
-        ServiceCode: serviceCode,
-        ServiceName: serviceName,
-        ServicePrice: parseFloat(servicePrice),
-      });
-      
-      // Show success notification
-      setNotification({
-        show: true,
-        type: 'success',
-        message: 'Service created successfully!'
-      });
-      
-      // Reset form
-      setServiceCode('');
-      setServiceName('');
-      setServicePrice('');
-      
-      // Hide notification after 3 seconds
-      setTimeout(() => {
-        setNotification({ show: false, type: '', message: '' });
-      }, 3000);
-      
-    } catch (error) {
-      // Handle error
-      setNotification({
-        show: true,
-        type: 'error',
-        message: error.response?.data?.message || 'Error creating service'
-      });
-      
-      // Hide notification after 5 seconds
-      setTimeout(() => {
-        setNotification({ show: false, type: '', message: '' });
-      }, 5000);
-    } finally {
-      setIsLoading(false);
+      if (editingId) {
+        await axios.put(`http://localhost:3000/api/service-records/${editingId}`, form);
+        setMessage('Record updated successfully');
+      } else {
+        await axios.post('http://localhost:3000/api/service-records', form);
+        setMessage('Record created successfully');
+      }
+      setForm({ PlateNumber: '', PackageNumber: '' });
+      setEditingId(null);
+      fetchRecords();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to save record');
+    }
+  };
+
+  const handleEdit = (record) => {
+    setForm({
+      PlateNumber: record.PlateNumber,
+      PackageNumber: record.PackageNumber,
+    });
+    setEditingId(record.RecordNumber);
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this record?')) return;
+    try {
+      await axios.delete(`http://localhost:3000/api/service-records/${id}`);
+      setMessage('Record deleted');
+      fetchRecords();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to delete record');
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Service Management</h1>
-      </div>
-      
-      {/* Notification */}
-      {notification.show && (
-        <div className={`p-4 mb-6 rounded-md flex items-center ${
-          notification.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
-        }`}>
-          {notification.type === 'success' ? (
-            <CheckCircle size={20} className="mr-2 flex-shrink-0" />
-          ) : (
-            <AlertCircle size={20} className="mr-2 flex-shrink-0" />
-          )}
-          <p>{notification.message}</p>
-        </div>
-      )}
-      
-      {/* Add Service Form */}
-      <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6 mb-8">
-        <h2 className="text-lg font-medium text-slate-800 mb-4">Add New Service</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label htmlFor="serviceCode" className="block text-sm font-medium text-slate-700 mb-1">
-                Service Code
-              </label>
-              <input
-                type="text"
-                id="serviceCode"
-                value={serviceCode}
-                onChange={(e) => setServiceCode(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
-                placeholder="Enter service code"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="serviceName" className="block text-sm font-medium text-slate-700 mb-1">
-                Service Name
-              </label>
-              <input
-                type="text"
-                id="serviceName"
-                value={serviceName}
-                onChange={(e) => setServiceName(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
-                placeholder="Enter service name"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="servicePrice" className="block text-sm font-medium text-slate-700 mb-1">
-                Service Price
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <span className="text-slate-500">$</span>
-                </div>
-                <input
-                  type="number"
-                  id="servicePrice"
-                  value={servicePrice}
-                  onChange={(e) => setServicePrice(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
-                  placeholder="0.00"
-                  step="0.01"
-                  min="0"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-6 flex justify-end">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`flex items-center px-4 py-2 rounded-md text-white ${
-                isLoading ? 'bg-slate-400 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700'
-              } transition-colors`}
-            >
-              {isLoading ? (
-                <>
-                  <RefreshCw size={18} className="mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                <>
-                  <Plus size={18} className="mr-2" />
-                  Add Service
-                </>
-              )}
-            </button>
-          </div>
-        </form>
+    <div className="max-w-4xl mx-auto p-6 mt-10 bg-white shadow-md rounded-lg border">
+      <h2 className="text-2xl font-bold text-green-800 mb-6">
+        {editingId ? 'Update Service Record' : 'Add New Service Record'}
+      </h2>
+
+      {message && <p className="text-green-600 text-sm mb-4">{message}</p>}
+      {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
+
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+        <input
+          name="PlateNumber"
+          value={form.PlateNumber}
+          onChange={handleChange}
+          className="p-2 border rounded"
+          placeholder="Plate Number"
+          required
+        />
+        <input
+          name="PackageNumber"
+          value={form.PackageNumber}
+          onChange={handleChange}
+          className="p-2 border rounded"
+          placeholder="Package Number"
+          required
+        />
+        <button
+          type="submit"
+          className="col-span-full bg-green-800 text-white py-2 rounded hover:bg-green-700"
+        >
+          {editingId ? 'Update Record' : 'Add Record'}
+        </button>
+      </form>
+
+      <h3 className="text-xl font-semibold mb-4 text-gray-700">All Service Records</h3>
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm text-left border">
+          <thead className="bg-gray-100 text-gray-700">
+            <tr>
+              <th className="py-2 px-4 border">Record #</th>
+              <th className="py-2 px-4 border">Service Date</th>
+              <th className="py-2 px-4 border">Plate</th>
+              <th className="py-2 px-4 border">Driver</th>
+              <th className="py-2 px-4 border">Car Type</th>
+              <th className="py-2 px-4 border">Package</th>
+              <th className="py-2 px-4 border">Price</th>
+              <th className="py-2 px-4 border">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {records.map((record) => (
+              <tr key={record.RecordNumber}>
+                <td className="py-2 px-4 border">{record.RecordNumber}</td>
+                <td className="py-2 px-4 border">{record.ServiceDate?.split('T')[0]}</td>
+                <td className="py-2 px-4 border">{record.PlateNumber}</td>
+                <td className="py-2 px-4 border">{record.DriverName}</td>
+                <td className="py-2 px-4 border">{record.CarType}</td>
+                <td className="py-2 px-4 border">{record.PackageName}</td>
+                <td className="py-2 px-4 border">{record.PackagePrice}</td>
+                <td className="py-2 px-4 border space-x-2">
+                  <button
+                    onClick={() => handleEdit(record)}
+                    className="text-green-600 hover:underline"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(record.RecordNumber)}
+                    className="text-red-600 hover:underline"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {records.length === 0 && (
+              <tr>
+                <td colSpan="8" className="py-4 text-center text-gray-500">
+                  No records found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );
-}
+};
+
+export default ServiceRecords;

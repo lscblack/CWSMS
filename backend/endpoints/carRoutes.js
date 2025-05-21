@@ -3,15 +3,15 @@ import { pool } from '../middleware.js';
 
 const router = express.Router();
 
-// INSERT - Add new car
+// Create a new car
 router.post('/', async (req, res) => {
     try {
-        const { PlateNumber, type, Model, ManufacturingYear, DriverPhone, MechanicName } = req.body;
+        const { PlateNumber, CarType, CarSize, DriverName, PhoneNumber } = req.body;
         const [result] = await pool.query(
-            'INSERT INTO Car (PlateNumber, type, Model, ManufacturingYear, DriverPhone, MechanicName) VALUES (?, ?, ?, ?, ?, ?)',
-            [PlateNumber, type, Model, ManufacturingYear, DriverPhone, MechanicName]
+            'INSERT INTO Car (PlateNumber, CarType, CarSize, DriverName, PhoneNumber) VALUES (?, ?, ?, ?, ?)',
+            [PlateNumber, CarType, CarSize, DriverName, PhoneNumber]
         );
-        res.status(201).json({ message: 'Car created successfully' });
+        res.status(201).json({ message: 'Car created successfully', plateNumber: PlateNumber });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error creating car' });
